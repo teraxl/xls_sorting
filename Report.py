@@ -52,8 +52,8 @@ class UnionReport(object):
                         self.full_massiv[elem] += self.m_result
                         self.full_massiv[elem] += self._ar_karton[elem]
                 else:
-                    del self._titan[elem]
-                    del self._ar_karton[elem]
+                    # del self._titan[elem]
+                    # del self._ar_karton[elem]
                     self.len_m -= 1
                     continue
             else:
