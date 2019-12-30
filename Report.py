@@ -1,5 +1,6 @@
 # coding=utf-8
-
+import xlwt
+from datetime import datetime
 
 class UnionReport(object):
     def __init__(self, ar_karton=None, titan=None):
@@ -41,20 +42,18 @@ class UnionReport(object):
 
         for elem in range(self.len_m - 1):
             if self._titan[elem][2] == self._ar_karton[elem][2]:
-                self.full_massiv[elem] = self._titan[elem]
                 if (self._titan[elem][3] - self._ar_karton[elem][3]) != 0:
                     if (self._titan[elem][3] - self._ar_karton[elem][3]) > 0:
-                        self.m_result[1] = 1
+                        self.full_massiv[elem] = self._titan[elem]
+                        self.m_result[1] = self._titan[elem][3] - self._ar_karton[elem][3]
                         self.full_massiv[elem] += self.m_result
                         self.full_massiv[elem] += self._ar_karton[elem]
                     else:
-                        self.m_result[1] = -1
+                        self.full_massiv[elem] = self._titan[elem]
+                        self.m_result[1] = self._titan[elem][3] - self._ar_karton[elem][3]
                         self.full_massiv[elem] += self.m_result
                         self.full_massiv[elem] += self._ar_karton[elem]
                 else:
-                    # del self._titan[elem]
-                    # del self._ar_karton[elem]
-                    self.len_m -= 1
                     continue
             else:
                 if self._titan[elem][2] == self._ar_karton[elem + 1][2]:
@@ -63,6 +62,32 @@ class UnionReport(object):
         for i in self.full_massiv.keys():
             print(self.full_massiv[i])
 
+    def create_xls(self):
+        font0 = xlwt.Font()
+        font0.name = 'Times New Roman'
+        font0.colour_index = 2
+        font0.bold = True
+
+        borders = xlwt.Borders()
+        borders.left = xlwt.Borders.THIN
+        borders.right = xlwt.Borders.THIN
+        borders.top = xlwt.Borders.THIN
+        borders.bottom = xlwt.Borders.THIN
+
+        style0 = xlwt.XFStyle()
+        style0.font = font0
+        style0.borders = borders
+
+        wb = xlwt.Workbook()
+        ws = wb.add_sheet('Общий отчет')
+
+        dd = [[0] * 15] * self.full_massiv.keys().__len__()
+
+        print(dd)
+
+
+
+        wb.save('Отчет.xlsx')
 
 
 

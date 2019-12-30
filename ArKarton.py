@@ -12,6 +12,8 @@ class ArKarton(object):
         self.len_column = self.sheet.ncols
         self.len_row = self.sheet.nrows
 
+        self.sorted_list = None
+
     def read_xls(self):
         if not self.sheet.cell(1, 1).value in "Company:":
             return 0
@@ -36,5 +38,5 @@ class ArKarton(object):
                             if elem != 'TOTAL'
                         ]
 
-            sorted_list = sorted(dict_sort.values(), key=lambda x: x[1])
-            return sorted_list
+            self.sorted_list = sorted(dict_sort.values(), key=lambda x: x[1])
+            return self.sorted_list

@@ -31,8 +31,9 @@ class MyTitan(QtWidgets.QWidget):
         xl = ArKarton.ArKarton(file, self.ui.progress)
         sp = str(file).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
+        _t_values_ = xl.read_xls()
 
-        if not xl.read_xls() != 0:
+        if not _t_values_ != 0:
             msg = QMessageBox(self)
             msg.setWindowTitle("Внимание!!!")
             msg.setText("Выбранный вами файл не является файлом\n"
@@ -46,7 +47,7 @@ class MyTitan(QtWidgets.QWidget):
             else:
                 pass
         else:
-            self.listArKarton = xl.read_xls()
+            self.listArKarton = _t_values_
 
         self.visable_button()
 
@@ -78,8 +79,9 @@ class MyTitan(QtWidgets.QWidget):
         xl = Titan(file, self.ui.progress)
         sp = str(file).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
+        _t_values = xl.read_xlsx()
 
-        if not xl.read_xlsx() != 0:
+        if not _t_values != 0:
             msg = QMessageBox(self)
             msg.setWindowTitle("Внимание!!!")
             msg.setText("Выбранный вами файл не является файлом\n"
@@ -93,7 +95,7 @@ class MyTitan(QtWidgets.QWidget):
             else:
                 pass
         else:
-            self.listTitan = xl.read_xlsx()
+            self.listTitan = _t_values
 
         self.visable_button()
 
@@ -123,6 +125,7 @@ class MyTitan(QtWidgets.QWidget):
     def CreateReport(self):
         ur = UnionReport(ar_karton=self.listArKarton, titan=self.listTitan)
         ur.Union()
+        ur.create_xls()
 
 
 app = QtWidgets.QApplication([])
