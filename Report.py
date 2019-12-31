@@ -59,8 +59,8 @@ class UnionReport(object):
                 if self._titan[elem][2] == self._ar_karton[elem + 1][2]:
                     del self._ar_karton[elem]
 
-        for i in self.full_massiv.keys():
-            print(self.full_massiv[i])
+        # for i in self.full_massiv.keys():
+        #     print(self.full_massiv[i])
 
     def create_xls(self):
         font0 = xlwt.Font()
@@ -81,11 +81,12 @@ class UnionReport(object):
         wb = xlwt.Workbook()
         ws = wb.add_sheet('Общий отчет')
 
-        dd = [[0] * 15] * self.full_massiv.keys().__len__()
+        r_mass = [[0] * self.full_massiv.keys().__len__()] * 15
+        split_list = list(self.full_massiv.values())
 
-        print(dd)
-
-
+        for i in range(split_list.__len__()):
+            for j in range(split_list[i].__len__()):
+                ws.write(i, j, split_list[i][j], style0)
 
         wb.save('Отчет.xlsx')
 
