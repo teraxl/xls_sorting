@@ -1,19 +1,27 @@
 # coding=utf-8
+import os
+
 import openpyxl
 from openpyxl import Workbook
+from openpyxl.styles import Font, colors, Border, Side, Alignment
+from openpyxl.worksheet.page import PrintOptions, PrintPageSetup, PageMargins
 
 
 class UnionReport(object):
-    def __init__(self, ar_karton=None, titan=None):
+    def __init__(self, ar_karton=None, titan=None, progress=None):
         self._ar_karton = ar_karton
         self._titan = titan
         self.ak = self._titan.__len__()
         self.tl = self._ar_karton.__len__()
         self.len_m = 0
-        self.file_name = 'Отчет__.xlsx'
+        self.file_name = 'Отчет.xlsx'
+        self.progress = progress
+
+    @property
+    def get_name(self):
+        return self.file_name
 
     def Union(self):
-
         for i in range(self._titan.__len__()):
             self._titan[i][0] = i + 1
             temp = self._titan[i][1]
@@ -72,11 +80,55 @@ class UnionReport(object):
         r_mass = [[0] * self.full_massiv.keys().__len__()] * 15
         split_list = list(self.full_massiv.values())
 
+        word_wrap_string = Alignment(wrapText=True,
+                                     horizontal='center',
+                                     vertical='center')
+
+        double_border_side = Side(border_style='dotted')
+
+        square_border = Border(top=double_border_side,
+                               right=double_border_side,
+                               bottom=double_border_side,
+                               left=double_border_side)
+        margins_tbls = 0.1968
+
+        ws.page_margins = PageMargins(left=margins_tbls,
+                                      right=margins_tbls,
+                                      top=margins_tbls,
+                                      bottom=margins_tbls)
+
+        ws.sheet_properties.pageSetUpPr.fitToPage = True
+        # ws.print_area = 'A1:E13'
+
+        ws.print_options = PrintOptions(horizontalCentered=True) #  , verticalCentered=True)
+
+        ws.page_setup = PrintPageSetup(worksheet=wb.active,
+                                       orientation='landscape',
+                                       paperSize=ws.PAPERSIZE_A4)
+
+        font_type_tnr = Font(name='Times New Roman', sz=10,
+                             color=colors.BLACK, bold=False)
+        font_type_arl = Font(name='Arial', sz=10,
+                             color=colors.BLACK, bold=True)
+
+        thin = Side(border_style='thin', color='000000')
+        range_border = Border(left=thin, right=thin,
+                              top=thin, bottom=thin)
+
         ws.merge_cells('A1:F1')
         ws.merge_cells('J1:O1')
-        ws['A1'] = 'Титан Логистик'
-        ws['H1'] = 'Результат'
-        ws['J1'] = 'АР Картон'
+
+        _headers = {'A1': 'Титан Логистик',
+                    'H1': 'Результат',
+                    'J1': 'АР Картон'}
+
+        for _key, _values in _headers.items():
+            ws[_key].value = _values
+            ws[_key].font = font_type_arl
+            ws[_key].alignment = word_wrap_string
+
+        for _range in ws.merged_cells.ranges:
+            self.style_range(ws, str(_range), border=square_border)
 
         column_count = {
             'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
@@ -94,15 +146,55 @@ class UnionReport(object):
         for i in range(split_list.__len__()):
             for j in range(split_list[i].__len__()):
                 ws.cell(i + 2, j + 1).value = split_list[i][j]
+                ws.cell(i + 2, j + 1).font = font_type_tnr
+            self.progress.setValue(i * 100)
 
         wb.save(self.file_name)
 
     def max_value(self, array, val_c):
         value_max = len(str(array[1][val_c]))
-        for i in range(1, array.__len__()):
-            for j in range(array[i - 1].__len__()):
+        for i in range(array.__len__()):
+            for j in range(array[i].__len__()):
                 if value_max < len(str(array[i][val_c])):
                     value_max = len(str(array[i][val_c]))
                 else:
                     continue
         return value_max + 3
+
+    def style_range(self, ws, cell_range, border=Border(), fill=None, font=None, alignment=None):
+        """
+        Apply styles to a range of cells as if they were a single cell.
+
+        :param ws:  Excel worksheet instance
+        :param range: An excel range to style (e.g. A1:F20)
+        :param border: An openpyxl Border
+        :param fill: An openpyxl PatternFill or GradientFill
+        :param font: An openpyxl Font object
+        """
+        top = Border(top=border.top)
+        left = Border(left=border.left)
+        right = Border(right=border.right)
+        bottom = Border(bottom=border.bottom)
+
+        first_cell = ws[cell_range.split(":")[0]]
+        if alignment:
+            ws.merge_cells(cell_range)
+            first_cell.alignment = alignment
+
+        rows = ws[cell_range]
+        if font:
+            first_cell.font = font
+
+        for cell in rows[0]:
+            cell.border = cell.border + top
+        for cell in rows[-1]:
+            cell.border = cell.border + bottom
+
+        for row in rows:
+            l = row[0]
+            r = row[-1]
+            l.border = l.border + left
+            r.border = r.border + right
+            if fill:
+                for c in row:
+                    c.fill = fill

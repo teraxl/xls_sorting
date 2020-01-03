@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QPushButton
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QPushButton, QWidget
 from PyQt5.QtCore import Qt
 import sys
 from GuiCount import Ui_Form
@@ -123,9 +123,18 @@ class MyTitan(QtWidgets.QWidget):
             return False
 
     def CreateReport(self):
-        ur = UnionReport(ar_karton=self.listArKarton, titan=self.listTitan)
+        ur = UnionReport(ar_karton=self.listArKarton, titan=self.listTitan, progress=self.ui.progress)
+        sp = str(ur.get_name).split("/")
+        self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " был сформирован --> " + "%p%")
         ur.Union()
         ur.create_xls()
+
+        # wg = QtWidgets.QWidget(self)
+        # wg.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
+        # wg.setWindowModality(Qt.ApplicationModal)
+        # wg.activateWindow()
+        # wg.resize(200, 400)
+        # wg.show()
 
 
 app = QtWidgets.QApplication([])
@@ -136,5 +145,4 @@ application.setWindowFlags(
     Qt.WindowCloseButtonHint
 )
 application.show()
-
 sys.exit(app.exec())

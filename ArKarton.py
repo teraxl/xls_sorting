@@ -15,7 +15,7 @@ class ArKarton(object):
         self.sorted_list = None
 
     def read_xls(self):
-        if not self.sheet.cell(1, 1).value in "Company:":
+        if not self.sheet.cell(1, 1).value in 'Company:':
             return 0
         else:
             dict_column = {}
