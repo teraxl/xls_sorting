@@ -1,6 +1,7 @@
 # coding=utf-8
-import xlwt
-from datetime import datetime
+import openpyxl
+from openpyxl import Workbook
+
 
 class UnionReport(object):
     def __init__(self, ar_karton=None, titan=None):
@@ -9,6 +10,7 @@ class UnionReport(object):
         self.ak = self._titan.__len__()
         self.tl = self._ar_karton.__len__()
         self.len_m = 0
+        self.file_name = 'Отчет__.xlsx'
 
     def Union(self):
 
@@ -63,32 +65,44 @@ class UnionReport(object):
         #     print(self.full_massiv[i])
 
     def create_xls(self):
-        font0 = xlwt.Font()
-        font0.name = 'Times New Roman'
-        font0.colour_index = 2
-        font0.bold = True
-
-        borders = xlwt.Borders()
-        borders.left = xlwt.Borders.THIN
-        borders.right = xlwt.Borders.THIN
-        borders.top = xlwt.Borders.THIN
-        borders.bottom = xlwt.Borders.THIN
-
-        style0 = xlwt.XFStyle()
-        style0.font = font0
-        style0.borders = borders
-
-        wb = xlwt.Workbook()
-        ws = wb.add_sheet('Общий отчет')
+        wb = Workbook(write_only=False)
+        ws = wb.active
+        ws.title = 'Общий отчет'
 
         r_mass = [[0] * self.full_massiv.keys().__len__()] * 15
         split_list = list(self.full_massiv.values())
 
+        ws.merge_cells('A1:F1')
+        ws.merge_cells('J1:O1')
+        ws['A1'] = 'Титан Логистик'
+        ws['H1'] = 'Результат'
+        ws['J1'] = 'АР Картон'
+
+        column_count = {
+            'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4,
+            'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
+            'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14
+        }
+
+        for c_key, c_values in column_count.items():
+            ws.column_dimensions[c_key].width = int(self.max_value(split_list, c_values))
+
+        ws.column_dimensions['G'].width = 0.83
+        ws.column_dimensions['I'].width = 0.83
+
+        # Заполнение данных Титан-Логистик
         for i in range(split_list.__len__()):
             for j in range(split_list[i].__len__()):
-                ws.write(i, j, split_list[i][j], style0)
+                ws.cell(i + 2, j + 1).value = split_list[i][j]
 
-        wb.save('Отчет.xlsx')
+        wb.save(self.file_name)
 
-
-
+    def max_value(self, array, val_c):
+        value_max = len(str(array[1][val_c]))
+        for i in range(1, array.__len__()):
+            for j in range(array[i - 1].__len__()):
+                if value_max < len(str(array[i][val_c])):
+                    value_max = len(str(array[i][val_c]))
+                else:
+                    continue
+        return value_max + 3
