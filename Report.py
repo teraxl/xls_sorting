@@ -9,12 +9,18 @@ from openpyxl.worksheet.page import PrintOptions, PrintPageSetup, PageMargins
 
 class UnionReport(object):
     def __init__(self, ar_karton=None, titan=None, progress=None):
+        self.full_massiv = {}
+        self.m_result = ['', '', '']
+
         self._ar_karton = ar_karton
         self._titan = titan
+
         self.ak = self._titan.__len__()
         self.tl = self._ar_karton.__len__()
+
         self.len_m = 0
         self.file_name = 'Отчет.xlsx'
+
         self.progress = progress
 
     @property
@@ -46,9 +52,6 @@ class UnionReport(object):
             self.len_m = self.tl - (abs(self.tl - self.ak))
         else:
             self.len_m = self.ak - (abs(self.tl - self.ak))
-
-        self.full_massiv = {}
-        self.m_result = ['', '', '']
 
         for elem in range(self.len_m - 1):
             if self._titan[elem][2] == self._ar_karton[elem][2]:
@@ -150,6 +153,7 @@ class UnionReport(object):
             self.progress.setValue(i * 100)
 
         wb.save(self.file_name)
+        wb.close()
 
     def max_value(self, array, val_c):
         value_max = len(str(array[1][val_c]))
@@ -198,3 +202,13 @@ class UnionReport(object):
             if fill:
                 for c in row:
                     c.fill = fill
+
+    def __del__(self):
+        print('был вызван деструктор Report')
+        # del self._ar_karton
+        # del self._titan
+        # del self.ak
+        # del self.tl
+        # del self.len_m
+        # del self.file_name
+        # del self.progress

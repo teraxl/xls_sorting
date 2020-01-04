@@ -2,11 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QPushButton, QWidget
+from PyQt5.QtGui import QImage, QPixmap, QIcon
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QPushButton, QWidget, QStyleFactory, QVBoxLayout, QLabel
 from PyQt5.QtCore import Qt
 import sys
+
+import m_image
 from GuiCount import Ui_Form
-import ArKarton
+from ArKarton import ArKarton
 from Titan import Titan
 from Report import UnionReport
 
@@ -15,11 +18,18 @@ class MyTitan(QtWidgets.QWidget):
 
     def __init__(self):
         super(MyTitan, self).__init__()
+        self.list_ar_karton = None
+        self.list_titan = None
+        self.__create_report = None
+
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.open_file_dialog_arkarton)
-        self.ui.pushButton_2.clicked.connect(self.openFileDialogTitan)
-        self.ui.pushButton_3.clicked.connect(self.CreateReport)
+        self.ui.pushButton_2.clicked.connect(self.open_file_dialog_titan)
+        self.ui.pushButton_3.clicked.connect(self.create_report)
+
+        self.__titan = None
+        self.__arkarton = None
 
     def visable_button(self):
         if (self.ui.lineEdit.text() and self.ui.lineEdit_2.text()) != "":
@@ -28,12 +38,13 @@ class MyTitan(QtWidgets.QWidget):
             self.ui.pushButton_3.setEnabled(False)
 
     def load_file_arkarton(self, file):
-        xl = ArKarton.ArKarton(file, self.ui.progress)
+        self.__arkarton = ArKarton(file, self.ui.progress)
         sp = str(file).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
-        _t_values_ = xl.read_xls()
+        self.__arkarton.read_xls()
+        self.list_ar_karton = self.__arkarton.get_data()
 
-        if not _t_values_ != 0:
+        if not self.list_ar_karton != 0:
             msg = QMessageBox(self)
             msg.setWindowTitle("Внимание!!!")
             msg.setText("Выбранный вами файл не является файлом\n"
@@ -46,17 +57,16 @@ class MyTitan(QtWidgets.QWidget):
                 self.open_file_dialog_arkarton()
             else:
                 pass
-        else:
-            self.listArKarton = _t_values_
 
         self.visable_button()
 
     def open_file_dialog_arkarton(self):
         dialog = QFileDialog(self)
-        filename = dialog.getOpenFileName(self,
-                                          "Выберете файл от АО АР Картон",
-                                          "", "ArKarton (*.xls)",
-                                          options=dialog.options())[0]
+        filename = dialog.getOpenFileName(
+            self, "Выберете файл от АО АР Картон",
+            "", "ArKarton (*.xls)",
+            options=dialog.options())[0]
+
         if not filename == '':
             self.ui.lineEdit.setText(filename)
             self.load_file_arkarton(filename)
@@ -76,12 +86,13 @@ class MyTitan(QtWidgets.QWidget):
             return False
 
     def load_file_titan(self, file):
-        xl = Titan(file, self.ui.progress)
+        self.__titan = Titan(file, self.ui.progress)
         sp = str(file).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
-        _t_values = xl.read_xlsx()
+        self.__titan.read_xlsx()
+        self.list_titan = self.__titan.get_data()
 
-        if not _t_values != 0:
+        if not self.list_ar_karton != 0:
             msg = QMessageBox(self)
             msg.setWindowTitle("Внимание!!!")
             msg.setText("Выбранный вами файл не является файлом\n"
@@ -91,15 +102,13 @@ class MyTitan(QtWidgets.QWidget):
             msg.show()
 
             if msg.exec() == QMessageBox.Ok:
-                self.openFileDialogTitan()
+                self.open_file_dialog_titan()
             else:
                 pass
-        else:
-            self.listTitan = _t_values
 
         self.visable_button()
 
-    def openFileDialogTitan(self):
+    def open_file_dialog_titan(self):
         dialog = QFileDialog(self)
         filename = dialog.getOpenFileName(self,
                                           "Выберете файл от ООО Титан Логистик",
@@ -117,28 +126,53 @@ class MyTitan(QtWidgets.QWidget):
             msg.show()
 
             if msg.exec() == QMessageBox.Ok:
-                self.openFileDialogTitan()
+                self.open_file_dialog_titan()
             else:
                 pass
             return False
 
-    def CreateReport(self):
-        ur = UnionReport(ar_karton=self.listArKarton, titan=self.listTitan, progress=self.ui.progress)
-        sp = str(ur.get_name).split("/")
+    def create_report(self):
+        self.__create_report = UnionReport(ar_karton=self.list_ar_karton, titan=self.list_titan, progress=self.ui.progress)
+        sp = str(self.__create_report.get_name).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " был сформирован --> " + "%p%")
-        ur.Union()
-        ur.create_xls()
+        self.ui.progress.setStyleSheet(
+            "border: 2px solid grey;"
+            "border-radius: 5px;"
+            "text-align: center;"
+            "}"
+            "QProgressBar::chunk {"
+            "background-color: #00ff00;"
+            "width: 20px;}"
+            "QProgressBar::chunk[urgent=true] {"
+            "background-color: red;"
+            "}"
+        )
+        self.__create_report.Union()
+        self.__create_report.create_xls()
 
-        # wg = QtWidgets.QWidget(self)
-        # wg.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
-        # wg.setWindowModality(Qt.ApplicationModal)
-        # wg.activateWindow()
-        # wg.resize(200, 400)
-        # wg.show()
+        self.ui.pushButton_3.setDisabled(True)
+        self.ui.lineEdit.clear()
+        self.ui.lineEdit_2.clear()
+
+        self.image = QPixmap(m_image.icon_app)
+
+        self.label = QLabel()
+        self.label.setPixmap(self.image)
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.label)
+        wg = QtWidgets.QWidget(self)
+        wg.setLayout(self.layout)
+        wg.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
+        wg.setWindowModality(Qt.ApplicationModal)
+        wg.activateWindow()
+        wg.resize(200, 400)
+        wg.show()
 
 
 app = QtWidgets.QApplication([])
 application = MyTitan()
+application.setWindowIcon(QIcon(QPixmap(m_image.icon_app)))
 application.setWindowFlags(
     Qt.Window |
     Qt.WindowMinimizeButtonHint |

@@ -5,6 +5,18 @@ class ArKarton(object):
     def __init__(self, file=None, progress=None):
         self.file = file
         self.progress = progress
+        self.progress.setStyleSheet(
+            "border: 2px solid grey;"
+            "border-radius: 5px;"
+            "text-align: center;"
+            "}"
+            "QProgressBar::chunk {"
+            "background-color: #05B8CC;"
+            "width: 20px;}"
+            "QProgressBar::chunk[urgent=true] {"
+            "background-color: red;"
+            "}"
+        )
 
         self.book = xl.open_workbook(self.file)
         self.sheet = self.book.sheet_by_index(0)
@@ -40,3 +52,7 @@ class ArKarton(object):
 
             self.sorted_list = sorted(dict_sort.values(), key=lambda x: x[1])
             return self.sorted_list
+
+    def get_data(self):
+        return self.sorted_list
+
