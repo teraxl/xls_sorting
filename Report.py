@@ -5,7 +5,7 @@ import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Font, colors, Border, Side, Alignment
 from openpyxl.worksheet.page import PrintOptions, PrintPageSetup, PageMargins
-
+from datetime import date
 
 class UnionReport(object):
     def __init__(self, ar_karton=None, titan=None, progress=None):
@@ -19,7 +19,7 @@ class UnionReport(object):
         self.tl = self._ar_karton.__len__()
 
         self.len_m = 0
-        self.file_name = 'Отчет.xlsx'
+        self.file_name = 'Отчет_{0}.xlsx'.format(date.today())
 
         self.progress = progress
 
@@ -72,9 +72,6 @@ class UnionReport(object):
                 if self._titan[elem][2] == self._ar_karton[elem + 1][2]:
                     del self._ar_karton[elem]
 
-        # for i in self.full_massiv.keys():
-        #     print(self.full_massiv[i])
-
     def create_xls(self):
         wb = Workbook(write_only=False)
         ws = wb.active
@@ -103,8 +100,7 @@ class UnionReport(object):
         ws.sheet_properties.pageSetUpPr.fitToPage = True
         # ws.print_area = 'A1:E13'
 
-        ws.print_options = PrintOptions(horizontalCentered=True) #  , verticalCentered=True)
-
+        ws.print_options = PrintOptions(horizontalCentered=True)
         ws.page_setup = PrintPageSetup(worksheet=wb.active,
                                        orientation='landscape',
                                        paperSize=ws.PAPERSIZE_A4)
@@ -203,12 +199,3 @@ class UnionReport(object):
                 for c in row:
                     c.fill = fill
 
-    def __del__(self):
-        print('был вызван деструктор Report')
-        # del self._ar_karton
-        # del self._titan
-        # del self.ak
-        # del self.tl
-        # del self.len_m
-        # del self.file_name
-        # del self.progress

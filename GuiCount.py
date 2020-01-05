@@ -2,7 +2,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QRegion, QPalette, QColor, QFont
-from PyQt5.QtWidgets import QProgressBar
+from PyQt5.QtWidgets import QProgressBar, QMenuBar, QMenu, QVBoxLayout, QApplication
 
 
 class Ui_Form(object):
@@ -24,6 +24,8 @@ class Ui_Form(object):
         self.pushButton_3 = None
         self.progress = None
         self.palette = None
+        self.menuBar = None
+        self.file = None
 
     def setupUi(self, Form):
         self.sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -46,6 +48,23 @@ class Ui_Form(object):
         self.font.setPointSize(10)
         self.font.setBold(True)
 
+        self.menuBar = QMenuBar()
+        self.file = QMenu('Файл')
+        self.about_me = QMenu('Справка')
+        self.menuBar.setFont(self.font)
+        self.menuBar.setStyleSheet(
+            "QMenuBar {"
+            "color: #757575;"
+            "background: #e1e2e3;"
+            "border: 1px solid whrite;"
+            "border-color: #cccccc;"
+            "}"
+        )
+        self.menuBar.addMenu(self.file)
+        self.menuBar.addMenu(self.about_me)
+
+        self.file.addAction('Выход')
+
         self.label = QtWidgets.QLabel(Form)
         self.label.setObjectName("label")
         self.label.setFont(self.font)
@@ -56,7 +75,6 @@ class Ui_Form(object):
             "font-size: 15px;"
             "}"
         )
-
         self.label_2 = QtWidgets.QLabel(Form)
         self.label_2.setObjectName("label_2")
         self.label_2.setFont(self.font)
@@ -67,7 +85,6 @@ class Ui_Form(object):
             "font-size: 15px;"
             "}"
         )
-
         self.lineEdit = QtWidgets.QLineEdit(Form)
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit.setPlaceholderText('Выберете файл отчета от ООО АР Катрон')
@@ -87,7 +104,6 @@ class Ui_Form(object):
             "border-width:2px;"
             "}"
         )
-
         self.lineEdit_2 = QtWidgets.QLineEdit(Form)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.lineEdit_2.setPlaceholderText('Выберете файл отчета от ООО Титан Логистик')
@@ -119,8 +135,8 @@ class Ui_Form(object):
             "border: 2px solid grey;"
             "border-radius: 5px;"
             "border-width:2px;"
-            "}")
-
+            "}"
+        )
         self.pushButton_2 = QtWidgets.QPushButton(Form)
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_2.setFont(self.font)
@@ -136,7 +152,6 @@ class Ui_Form(object):
             "border-radius: 5px;"
             "border-width:2px;"
             "}")
-
         self.pushButton_3 = QtWidgets.QPushButton(Form)
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_3.setSizePolicy(self.sizePolicy)
@@ -145,13 +160,20 @@ class Ui_Form(object):
         self.pushButton_3.setEnabled(False)
         self.pushButton_3.setStyleSheet(
             "QPushButton {"
+            "color: #353535;"
             "background-color: #05B8CC;"
             "border: 2px solid grey;"
             "border-radius: 5px;"
             "border-width:2px;"
-            "}")
-
-        self.spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+            "}"
+            "QPushButton::disabled {"
+            "color: #858585;"
+            "background-color: #CCCCCC;"
+            "border: 2px solid grey;"
+            "border-radius: 5px;"
+            "border-width:2px;"
+            "}"
+        )
 
         self.progress = QProgressBar(Form)
         self.progress.setObjectName("progress")
@@ -162,6 +184,7 @@ class Ui_Form(object):
         self.palette.setColor(QPalette.Text, QColor('#353535'))
         self.progress.setPalette(self.palette)
         self.progress.setStyleSheet(
+            "QProgressBar {"
             "color: grey;"
             "border: 2px solid grey;"
             "border-radius: 5px;"
@@ -172,6 +195,7 @@ class Ui_Form(object):
             "width: 20px;}"
             "QProgressBar::chunk[urgent=true] {"
             "background-color: red;"
+            "margin: 0.5px;"
             "}"
         )
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -205,15 +229,15 @@ class Ui_Form(object):
         self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
         self.verticalLayout.setContentsMargins(5, 5, 5, 5)
         self.verticalLayout.setSpacing(5)
+        self.verticalLayout.addWidget(self.menuBar)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
         self.gridLayout = QtWidgets.QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
-        self.gridLayout.setContentsMargins(5, 5, 5, 5)
+        self.gridLayout.setContentsMargins(1, 1, 1, 1)
         self.gridLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
-        self.gridLayout.setSpacing(5)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
 
         self.retranslateUi(Form)

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QImage, QPixmap, QIcon
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QPushButton, QWidget, QStyleFactory, QVBoxLayout, QLabel
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QDir
 import sys
 
 import m_image
@@ -134,7 +135,7 @@ class MyTitan(QtWidgets.QWidget):
     def create_report(self):
         self.__create_report = UnionReport(ar_karton=self.list_ar_karton, titan=self.list_titan, progress=self.ui.progress)
         sp = str(self.__create_report.get_name).split("/")
-        self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " был сформирован --> " + "%p%")
+        self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " сформирован --> " + "%p%")
         self.ui.progress.setStyleSheet(
             "border: 2px solid grey;"
             "border-radius: 5px;"
@@ -147,36 +148,76 @@ class MyTitan(QtWidgets.QWidget):
             "background-color: red;"
             "}"
         )
+
         self.__create_report.Union()
         self.__create_report.create_xls()
-
         self.ui.pushButton_3.setDisabled(True)
         self.ui.lineEdit.clear()
         self.ui.lineEdit_2.clear()
 
-        self.image = QPixmap(m_image.icon_app)
+        msg = QMessageBox(self)
+        msg.setText('Файл отчета был сформирован в \n{0}/{1}\n\n{2}'.format(
+            QDir.currentPath(), self.__create_report.file_name,
+            'Желаете открыть сформированный файл?'))
 
-        self.label = QLabel()
-        self.label.setPixmap(self.image)
+        msg.setWindowTitle('Отчет сформирован')
+        msg.setWindowModality(Qt.ApplicationModal)
+        btn1 = msg.addButton('Да', QMessageBox.YesRole)
+        btn2 = msg.addButton('Нет', QMessageBox.NoRole)
 
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.label)
-        wg = QtWidgets.QWidget(self)
-        wg.setLayout(self.layout)
-        wg.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
-        wg.setWindowModality(Qt.ApplicationModal)
-        wg.activateWindow()
-        wg.resize(200, 400)
-        wg.show()
+        msg.setStyleSheet(
+            "QLabel {"
+            "color: #353535;"
+            "}"
+        )
+        btn1.setStyleSheet(
+            "QPushButton {"
+            "background-color: #05B8CC;"
+            "border: 2px solid grey;"
+            "border-radius: 5px;"
+            "border-width:2px;"
+            "}"
+        )
+        btn2.setStyleSheet(
+            "QPushButton {"
+            "background-color: #05B8CC;"
+            "border: 2px solid grey;"
+            "border-radius: 5px;"
+            "border-width:2px;"
+            "}"
+        )
+
+        btn1.setFixedSize(50, 30)
+        btn2.setFixedSize(50, 30)
+        msg.exec()
+        msg.show()
+
+        if msg.clickedButton() == btn1:
+            os.system('start excel.exe {0}/{1}'.format(QDir.currentPath(), self.__create_report.file_name))
+        else:
+            pass
+
+        # self.image = QPixmap(m_image.icon_app)
+        # self.label = QLabel()
+        # self.label.setPixmap(self.image)
+        # self.layout = QVBoxLayout()
+        # self.layout.addWidget(self.label)
+        # wg = QtWidgets.QWidget(self)
+        # wg.setLayout(self.layout)
+        # wg.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint)
+        # wg.setWindowModality(Qt.ApplicationModal)
+        # wg.activateWindow()
+        # wg.resize(200, 400)
+        # wg.show()
 
 
 app = QtWidgets.QApplication([])
 application = MyTitan()
 application.setWindowIcon(QIcon(QPixmap(m_image.icon_app)))
-application.setWindowFlags(
-    Qt.Window |
-    Qt.WindowMinimizeButtonHint |
-    Qt.WindowCloseButtonHint
-)
+# application.setWindowFlags(
+#     Qt.Window |
+#     Qt.WindowMinimizeButtonHint |
+#     Qt.WindowCloseButtonHint
+# )
 application.show()
 sys.exit(app.exec())
