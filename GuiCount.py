@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtCore import QRect
+from PyQt5.QtCore import QRect, QMetaMethod
 from PyQt5.QtGui import QRegion, QPalette, QColor, QFont
-from PyQt5.QtWidgets import QProgressBar, QMenuBar, QMenu, QVBoxLayout, QApplication
+from PyQt5.QtWidgets import QProgressBar, QMenuBar, QMenu, QVBoxLayout, QApplication, QAction, qApp, QStatusBar
 
 
 class Ui_Form(object):
@@ -26,6 +26,8 @@ class Ui_Form(object):
         self.palette = None
         self.menuBar = None
         self.file = None
+        self.about_me = None
+        self.close_app = None
 
     def setupUi(self, Form):
         self.sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -50,7 +52,6 @@ class Ui_Form(object):
 
         self.menuBar = QMenuBar()
         self.file = QMenu('Файл')
-        self.about_me = QMenu('Справка')
         self.menuBar.setFont(self.font)
         self.menuBar.setStyleSheet(
             "QMenuBar {"
@@ -60,10 +61,19 @@ class Ui_Form(object):
             "border-color: #cccccc;"
             "}"
         )
-        self.menuBar.addMenu(self.file)
-        self.menuBar.addMenu(self.about_me)
+        self.about_me = QAction('Об авторе', Form)
+        self.close_app = QAction('Выход', Form)
 
-        self.file.addAction('Выход')
+        self.menuBar.addMenu(self.file)
+        self.menuBar.addAction(self.about_me)
+        self.file.addAction(self.close_app)
+
+        self.status_bar = QStatusBar(Form)
+        self.status_bar.setStyleSheet(
+            "QStatusBar {"
+            "color: grey;"
+            "}"
+        )
 
         self.label = QtWidgets.QLabel(Form)
         self.label.setObjectName("label")
@@ -174,7 +184,6 @@ class Ui_Form(object):
             "border-width:2px;"
             "}"
         )
-
         self.progress = QProgressBar(Form)
         self.progress.setObjectName("progress")
         self.progress.setFont(self.font)
@@ -233,6 +242,7 @@ class Ui_Form(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
+        self.verticalLayout.addWidget(self.status_bar)
 
         self.gridLayout = QtWidgets.QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
