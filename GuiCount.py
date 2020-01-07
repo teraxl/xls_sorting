@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtCore import QRect, QMetaMethod
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QRegion, QPalette, QColor, QFont
 from PyQt5.QtWidgets import QProgressBar, QMenuBar, QMenu, QVBoxLayout, QApplication, QAction, qApp, QStatusBar
 
@@ -28,6 +27,7 @@ class Ui_Form(object):
         self.file = None
         self.about_me = None
         self.close_app = None
+        self.status_bar = None
 
     def setupUi(self, Form):
         self.sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -260,3 +260,8 @@ class Ui_Form(object):
         self.pushButton.setText(_translate("Form", "+"))
         self.pushButton_2.setText(_translate("Form", "+"))
         self.pushButton_3.setText(_translate("Form", "Сравнить файлы"))
+
+    def form_about(self):
+        wg = QtWidgets.QWidget(self)
+        wg.resize(329, 246)
+        wg.show()

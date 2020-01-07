@@ -4,10 +4,13 @@ import os
 
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QVBoxLayout, QLabel, qApp
-from PyQt5.QtCore import Qt, QDir
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QVBoxLayout, QLabel, qApp, QTextBrowser, QGridLayout, QPushButton
+from PyQt5.QtCore import Qt, QDir, QSize
 import sys
 
+from PyQt5.uic.properties import QtCore
+
+import about
 import m_image
 from GuiCount import Ui_Form
 from ArKarton import ArKarton
@@ -201,17 +204,16 @@ class MyTitan(QtWidgets.QWidget):
             pass
 
     def form_about(self):
-        self.image = QPixmap(m_image.icon_app)
-        self.label = QLabel()
-        self.label.setPixmap(self.image)
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.label)
         wg = QtWidgets.QWidget(self)
-        wg.setLayout(self.layout)
+        ab = about.AboutMe()
+        lsy = QVBoxLayout()
+        lsy.addWidget(ab)
+        wg.setFixedSize(329, 246)
+        wg.setWindowTitle('Об авторе')
+        wg.setLayout(lsy)
         wg.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
         wg.setWindowModality(Qt.ApplicationModal)
         wg.activateWindow()
-        wg.resize(400, 200)
         wg.show()
 
 
