@@ -141,7 +141,6 @@ class UnionReport(object):
         ws.column_dimensions['G'].width = 0.83
         ws.column_dimensions['I'].width = 0.83
 
-        # Заполнение данных Титан-Логистик
         for i in range(split_list.__len__()):
             for j in range(split_list[i].__len__()):
                 ws.cell(i + 2, j + 1).value = split_list[i][j]

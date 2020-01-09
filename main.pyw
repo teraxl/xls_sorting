@@ -139,7 +139,10 @@ class MyTitan(QtWidgets.QWidget):
             return False
 
     def create_report(self):
-        self.__create_report = UnionReport(ar_karton=self.list_ar_karton, titan=self.list_titan, progress=self.ui.progress)
+        self.__create_report = UnionReport(
+            ar_karton=self.list_ar_karton,
+            titan=self.list_titan,
+            progress=self.ui.progress)
         sp = str(self.__create_report.get_name).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " сформирован --> " + "%p%")
         self.ui.progress.setStyleSheet(
