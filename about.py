@@ -38,11 +38,8 @@ class Ui_Form(object):
         self.textBrowser = QtWidgets.QTextBrowser()
         self.textBrowser.setObjectName("textBrowser")
         self.verticalLayout.addWidget(self.textBrowser)
-        self.pushButton = QtWidgets.QPushButton("Ок")
-        self.pushButton.setObjectName("pushButton")
         self.v_box_layout.addWidget(self.label)
         self.v_box_layout.addLayout(self.verticalLayout)
-        self.verticalLayout.addWidget(self.pushButton)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -72,7 +69,6 @@ class Ui_Form(object):
             "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; "
             "-qt-block-indent:0; text-indent:0px;\">email: "
             "muga.alexandr@yandex.ru</p></body></html>"))
-        # self.pushButton.setText(_translate("Form", "ОК"))
 
 
 class AboutMe(QtWidgets.QWidget):
@@ -82,3 +78,4 @@ class AboutMe(QtWidgets.QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+

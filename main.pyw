@@ -35,6 +35,9 @@ class MyTitan(QtWidgets.QWidget):
         self.ui.close_app.triggered.connect(qApp.exit)
         self.ui.about_me.triggered.connect(self.form_about)
 
+        self.p_btn_close = None
+        self.widget = None
+
         self.__titan = None
         self.__arkarton = None
 
@@ -207,17 +210,21 @@ class MyTitan(QtWidgets.QWidget):
             pass
 
     def form_about(self):
-        wg = QtWidgets.QWidget(self)
+        self.widget = QtWidgets.QWidget(self)
+        self.p_btn_close = QtWidgets.QPushButton("Ok")
+        self.p_btn_close.setObjectName('p_btn_close')
+        self.p_btn_close.clicked.connect(self.widget.close)
         ab = about.AboutMe()
         lsy = QVBoxLayout()
         lsy.addWidget(ab)
-        wg.setFixedSize(329, 246)
-        wg.setWindowTitle('Об авторе')
-        wg.setLayout(lsy)
-        wg.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
-        wg.setWindowModality(Qt.ApplicationModal)
-        wg.activateWindow()
-        wg.show()
+        lsy.addWidget(self.p_btn_close)
+        self.widget.setFixedSize(329, 246)
+        self.widget.setWindowTitle('Об авторе')
+        self.widget.setLayout(lsy)
+        self.widget.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
+        self.widget.setWindowModality(Qt.ApplicationModal)
+        self.widget.activateWindow()
+        self.widget.show()
 
 
 if __name__ == '__main__':
