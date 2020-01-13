@@ -1,7 +1,9 @@
 # coding=utf-8
 import os
+from pathlib import Path
 
 import openpyxl
+from PyQt5.QtCore import QDir
 from openpyxl import Workbook
 from openpyxl.styles import Font, colors, Border, Side, Alignment
 from openpyxl.worksheet.page import PrintOptions, PrintPageSetup, PageMargins
@@ -20,6 +22,7 @@ class UnionReport(object):
 
         self.len_m = 0
         self.file_name = 'Отчет_{0}.xlsx'.format(date.today())
+        self.xlss_sort = ''
 
         self.progress = progress
 
@@ -147,8 +150,14 @@ class UnionReport(object):
                 ws.cell(i + 2, j + 1).font = font_type_tnr
             self.progress.setValue(i * 100)
 
-        wb.save(self.file_name)
-        wb.close()
+        self.xlss_sort = '{}{}{}'.format(QDir.homePath(), '/Desktop', '/Общий отчет палетты/')
+        if not QDir().exists(self.xlss_sort):
+            QDir().mkdir(self.xlss_sort)
+            wb.save('{}{}'.format(self.xlss_sort, self.file_name))
+            wb.close()
+        else:
+            wb.save('{}{}'.format(self.xlss_sort, self.file_name))
+            wb.close()
 
     def max_value(self, array, val_c):
         value_max = len(str(array[1][val_c]))

@@ -169,7 +169,7 @@ class MyTitan(QtWidgets.QWidget):
 
         msg = QMessageBox(self)
         msg.setText('Файл отчета был сформирован в \n{0}/{1}\n\n{2}'.format(
-            QDir.currentPath(), self.__create_report.file_name,
+            self.__create_report.xlss_sort, self.__create_report.file_name,
             'Желаете открыть сформированный файл?'))
 
         msg.setWindowTitle('Отчет сформирован')
