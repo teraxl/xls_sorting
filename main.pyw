@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+from PyInstaller.building.build_main import build
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QVBoxLayout, QLabel, qApp, QTextBrowser, QGridLayout, QPushButton
@@ -9,6 +10,7 @@ from PyQt5.QtCore import Qt, QDir, QSize
 import sys
 
 from PyQt5.uic.properties import QtCore
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 import about
 import m_image
@@ -231,6 +233,11 @@ class MyTitan(QtWidgets.QWidget):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
+    cntx = build()
+    print(cntx)
+    app.setApplicationName('Общий отчет')
+    app.setOrganizationName('ООО "РуТиЛинк"')
+    app.setAttribute(Qt.AA_DontUseNativeDialogs)
     application = MyTitan()
     application.setWindowIcon(QIcon(QPixmap(m_image.icon_app)))
     application.setWindowFlags(

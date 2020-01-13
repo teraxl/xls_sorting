@@ -1,0 +1,1 @@
+pyinstaller  --onefile -n "Общий отчет" --windowed --noconsole -i .\icon_app.ico .\main.pyw
