@@ -143,6 +143,7 @@ class UnionReport(object):
 
         ws.column_dimensions['G'].width = 0.83
         ws.column_dimensions['I'].width = 0.83
+        ws.column_dimensions['H'].width = 11.0
 
         for i in range(split_list.__len__()):
             for j in range(split_list[i].__len__()):
@@ -170,15 +171,6 @@ class UnionReport(object):
         return value_max + 3
 
     def style_range(self, ws, cell_range, border=Border(), fill=None, font=None, alignment=None):
-        """
-        Apply styles to a range of cells as if they were a single cell.
-
-        :param ws:  Excel worksheet instance
-        :param range: An excel range to style (e.g. A1:F20)
-        :param border: An openpyxl Border
-        :param fill: An openpyxl PatternFill or GradientFill
-        :param font: An openpyxl Font object
-        """
         top = Border(top=border.top)
         left = Border(left=border.left)
         right = Border(right=border.right)

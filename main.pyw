@@ -205,7 +205,9 @@ class MyTitan(QtWidgets.QWidget):
         msg.show()
 
         if msg.clickedButton() == btn1:
-            os.system('start excel.exe {0}/{1}'.format(QDir.currentPath(), self.__create_report.file_name))
+            os.system('start excel.exe "{}{}"'.format(
+                self.__create_report.xlss_sort,
+                self.__create_report.file_name))
         else:
             pass
 

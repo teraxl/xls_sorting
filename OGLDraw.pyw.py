@@ -152,11 +152,11 @@ class GLWidget(QOpenGLWidget):
         dy = event.y() - self.lastPos.y()
 
         if event.buttons() & Qt.LeftButton:
-            self.setXRotation(self.xRot + 8 * dy)
+            self.setXRotation(self.xRot + 8 * -dy)
             self.setYRotation(self.yRot + 8 * dx)
         elif event.buttons() & Qt.RightButton:
-            self.setXRotation(self.xRot + 8 * dy)
-            self.setZRotation(self.zRot + 8 * dx)
+            self.setXRotation(self.xRot + 8 * -dy)
+            self.setZRotation(self.zRot + 8 * -dx)
 
         self.lastPos = event.pos()
 
