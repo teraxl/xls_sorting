@@ -53,10 +53,11 @@ class MyTitan(QtWidgets.QWidget):
         self.__arkarton = ArKarton(file, self.ui.progress)
         sp = str(file).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
-        self.__arkarton.read_xls()
-        self.list_ar_karton = self.__arkarton.get_data()
+        try:
+            self.__arkarton.read_xls()
+            self.list_ar_karton = self.__arkarton.get_data()
 
-        if not self.list_ar_karton != 0:
+        except Exception:
             msg = QMessageBox(self)
             msg.setWindowTitle("Внимание!!!")
             msg.setText("Выбранный вами файл не является файлом\n"
@@ -69,6 +70,7 @@ class MyTitan(QtWidgets.QWidget):
                 self.open_file_dialog_arkarton()
             else:
                 pass
+
 
         self.visable_button()
 
@@ -101,10 +103,12 @@ class MyTitan(QtWidgets.QWidget):
         self.__titan = Titan(file, self.ui.progress)
         sp = str(file).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
-        self.__titan.read_xlsx()
-        self.list_titan = self.__titan.get_data()
 
-        if not self.list_ar_karton != 0:
+        try:
+            self.__titan.read_xlsx()
+            self.list_titan = self.__titan.get_data()
+
+        except Exception:
             msg = QMessageBox(self)
             msg.setWindowTitle("Внимание!!!")
             msg.setText("Выбранный вами файл не является файлом\n"
@@ -233,8 +237,6 @@ class MyTitan(QtWidgets.QWidget):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
-    cntx = build()
-    print(cntx)
     app.setApplicationName('Общий отчет')
     app.setOrganizationName('ООО "РуТиЛинк"')
     app.setAttribute(Qt.AA_DontUseNativeDialogs)
