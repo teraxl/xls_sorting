@@ -1,17 +1,12 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
 
-from PyInstaller.building.build_main import build
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QFileDialog, QMessageBox, QVBoxLayout, QLabel, qApp, QTextBrowser, QGridLayout, QPushButton
-from PyQt5.QtCore import Qt, QDir, QSize
+from PyQt5.QtWidgets import QFileDialog, QMessageBox, QVBoxLayout, qApp
+from PyQt5.QtCore import Qt
 import sys
-
-from PyQt5.uic.properties import QtCore
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
-
 import about
 import m_image
 from GuiCount import Ui_Form
@@ -54,9 +49,7 @@ class MyTitan(QtWidgets.QWidget):
         sp = str(file).split("/")
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
         try:
-            self.__arkarton.read_xls()
-            self.list_ar_karton = self.__arkarton.get_data()
-
+            self.list_ar_karton = self.__arkarton.read_xls()
         except Exception:
             msg = QMessageBox(self)
             msg.setWindowTitle("Внимание!!!")
@@ -70,7 +63,6 @@ class MyTitan(QtWidgets.QWidget):
                 self.open_file_dialog_arkarton()
             else:
                 pass
-
 
         self.visable_button()
 
@@ -105,8 +97,7 @@ class MyTitan(QtWidgets.QWidget):
         self.ui.progress.setFormat(sp[int(len(sp)) - 1] + " загружен --> " + "%p%")
 
         try:
-            self.__titan.read_xlsx()
-            self.list_titan = self.__titan.get_data()
+            self.list_titan = self.__titan.read_xlsx()
 
         except Exception:
             msg = QMessageBox(self)
@@ -175,7 +166,7 @@ class MyTitan(QtWidgets.QWidget):
 
         msg = QMessageBox(self)
         msg.setText('Файл отчета был сформирован в \n{0}/{1}\n\n{2}'.format(
-            self.__create_report.xlss_sort, self.__create_report.file_name,
+            self.__create_report.xlsx_sort, self.__create_report.file_name,
             'Желаете открыть сформированный файл?'))
 
         msg.setWindowTitle('Отчет сформирован')
@@ -212,7 +203,7 @@ class MyTitan(QtWidgets.QWidget):
 
         if msg.clickedButton() == btn1:
             os.system('start excel.exe "{}{}"'.format(
-                self.__create_report.xlss_sort,
+                self.__create_report.xlsx_sort,
                 self.__create_report.file_name))
         else:
             pass
